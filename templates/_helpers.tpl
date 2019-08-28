@@ -63,7 +63,7 @@ template logic.
 {{- end -}}
 
 {{/*
-Set's the replica count based on the different modes configured by user
+Sets the replica count based on the different modes configured by user
 */}}
 {{- define "vault.replicas" -}}
   {{ if eq .mode "standalone" }}
@@ -76,7 +76,7 @@ Set's the replica count based on the different modes configured by user
 {{- end -}}
 
 {{/*
-Set's fsGroup based on different modes.  Standalone is the only mode
+Sets fsGroup based on different modes.  Standalone is the only mode
 that requires fsGroup at this time because it uses PVC for the file
 storage backend.
 */}}
@@ -87,7 +87,7 @@ storage backend.
 {{- end -}}
 
 {{/*
-Set's up configmap mounts if this isn't a dev deployment and the user
+Sets up configmap mounts if this isn't a dev deployment and the user
 defined a custom configuration.  Additionally iterates over any
 extra volumes the user may have specified (such as a secret with TLS).
 */}}
@@ -96,7 +96,7 @@ extra volumes the user may have specified (such as a secret with TLS).
         - name: config
           configMap:
             name: {{ template "vault.fullname" . }}-config
-  {{ end }}
+  {{ end -}}
   {{- range .Values.server.extraVolumes }}
         - name: userconfig-{{ .name }}
           {{ .type }}:
@@ -105,11 +105,11 @@ extra volumes the user may have specified (such as a secret with TLS).
           {{- else if (eq .type "secret") }}
             secretName: {{ .name }}
           {{- end }}
-  {{- end }}
+  {{- end -}}
 {{- end -}}
 
 {{/*
-Set's a command to override the entrypoint defined in the image
+Sets a command to override the entrypoint defined in the image
 so we can make the user experience nicer.  This works in with
 "vault.args" to specify what commands /bin/sh should run.
 */}}
@@ -121,7 +121,7 @@ so we can make the user experience nicer.  This works in with
 {{- end -}}
 
 {{/*
-Set's the args for custom command to render the Vault configuration
+Sets the args for custom command to render the Vault configuration
 file with IP addresses to make the out of box experience easier
 for users looking to use this chart with Consul Helm.
 */}}
@@ -136,43 +136,43 @@ for users looking to use this chart with Consul Helm.
 {{- end -}}
 
 {{/*
-Set's additional environment variables based on the mode.
+Sets additional environment variables based on the mode.
 */}}
 {{- define "vault.envs" -}}
-  {{ if eq .mode "dev" }}
+  {{- if eq .mode "dev" -}}
             - name: VAULT_DEV_ROOT_TOKEN_ID
               value: "root"
-  {{ end }}
+  {{- end -}}
 {{- end -}}
 
 {{/*
-Set's which additional volumes should be mounted to the container
+Sets which additional volumes should be mounted to the container
 based on the mode configured.
 */}}
 {{- define "vault.mounts" -}}
-  {{ if eq .mode "standalone" }}
-    {{ if eq (.Values.server.auditStorage.enabled | toString) "true" }}
+  {{ if eq .mode "standalone" -}}
+    {{- if eq (.Values.server.auditStorage.enabled | toString) "true" }}
             - name: audit
               mountPath: /vault/audit
-    {{ end }}
+    {{- end -}}
     {{ if eq (.Values.server.dataStorage.enabled | toString) "true" }}
             - name: data
               mountPath: /vault/data
-    {{ end }}
-  {{ end }}
+    {{- end -}}
+  {{- end -}}
   {{ if and (ne .mode "dev") (or (ne .Values.server.standalone.config "")  (ne .Values.server.ha.config "")) }}
             - name: config
               mountPath: /vault/config
-  {{ end }}
+  {{- end -}}
   {{- range .Values.server.extraVolumes }}
             - name: userconfig-{{ .name }}
               readOnly: true
               mountPath: {{ .path | default "/vault/userconfig" }}/{{ .name }}
-  {{- end }}
+  {{- end -}}
 {{- end -}}
 
 {{/*
-Set's up the volumeClaimTemplates when data or audit storage is required.  HA
+Sets up the volumeClaimTemplates when data or audit storage is required.  HA
 might not use data storage since Consul is likely it's backend, however, audit
 storage might be desired by the user.
 */}}
@@ -209,7 +209,7 @@ storage might be desired by the user.
 {{- end -}}
 
 {{/*
-Set's the affinity for pod placement when running in standalone and HA modes.
+Sets the affinity for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.affinity" -}}
   {{- if and (ne .mode "dev") .Values.server.affinity }}
@@ -219,7 +219,7 @@ Set's the affinity for pod placement when running in standalone and HA modes.
 {{- end -}}
 
 {{/*
-Set's the toleration for pod placement when running in standalone and HA modes.
+Sets the toleration for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.tolerations" -}}
   {{- if and (ne .mode "dev") .Values.server.tolerations }}
@@ -229,7 +229,7 @@ Set's the toleration for pod placement when running in standalone and HA modes.
 {{- end -}}
 
 {{/*
-Set's the node selector for pod placement when running in standalone and HA modes.
+Sets the node selector for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.nodeselector" -}}
   {{- if and (ne .mode "dev") .Values.server.nodeSelector }}
@@ -261,7 +261,7 @@ Sets extra ui service annotations
 
 
 {{/*
-Set's the container resources if the user has set any.
+Sets the container resources if the user has set any.
 */}}
 {{- define "vault.resources" -}}
   {{- if .Values.server.resources -}}

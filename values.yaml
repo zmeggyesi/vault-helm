@@ -15,7 +15,6 @@ server:
   # should map directly to the value of the resources field for a PodSpec.
   # By default no direct resource request is made.
   resources:
-  # resources:
   #   requests:
   #     memory: 256Mi
   #     cpu: 250m
@@ -31,14 +30,14 @@ server:
 
   # extraEnvironmentVars is a list of extra enviroment variables to set with the stateful set. These could be
   # used to include variables required for auto-unseal.
-  extraEnvironmentVars: {}
-    # GOOGLE_REGION: global,
-    # GOOGLE_PROJECT: myproject,
-    # GOOGLE_CREDENTIALS: /vault/userconfig/myproject/myproject-creds.json
+  # extraEnvironmentVars: 
+  #   GOOGLE_REGION: global
+  #   GOOGLE_PROJECT: myproject
+  #   GOOGLE_CREDENTIALS: /vault/userconfig/myproject/myproject-creds.json
 
   # extraSecretEnvironmentVars is a list of extra enviroment variables to set with the stateful set.
   # These variables take value from existing Secret objects.
-  extraSecretEnvironmentVars: []
+  # extraSecretEnvironmentVars:
     # - envName: AWS_SECRET_ACCESS_KEY
     #   secretName: vault
     #   secretKey: AWS_SECRET_ACCESS_KEY

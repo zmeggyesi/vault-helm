@@ -31,18 +31,21 @@ spec:
         component: server
       {{ template "vault.annotations" . }}
     spec:
-      {{ template "vault.affinity" . }}
-      {{ template "vault.tolerations" . }}
-      {{ template "vault.nodeselector" . }}
+      {{- template "vault.affinity" . }}
+      {{- template "vault.tolerations" . }}
+      {{- template "vault.nodeselector" . }}
       terminationGracePeriodSeconds: 10
       serviceAccountName: {{ template "vault.fullname" . }}
       securityContext:
         fsGroup: {{ template "vault.fsgroup" . }}
       volumes:
-        {{ template "vault.volumes" . }}
+        {{- template "vault.volumes" . }}
       containers:
         - name: vault
-          {{ template "vault.resources" . }}
+{{- if .Values.server.resources }}
+          resources:
+{{ toYaml .Values.server.resources | indent 12 }}
+{{- end }}
           securityContext:
             privileged: true
           image: "{{ .Values.global.image }}"
@@ -63,11 +66,11 @@ spec:
               value: "{{ include "vault.scheme" . }}://$(POD_IP):8200"
             - name: SKIP_CHOWN
               value: "true"
-            {{ template "vault.envs" . }}
+            {{ include "vault.envs" . }}
             {{- include "vault.extraEnvironmentVars" .Values.server | nindent 12 }}
             {{- include "vault.extraSecretEnvironmentVars" .Values.server | nindent 12 }}
           volumeMounts:
-          {{ template "vault.mounts" . }}
+          {{- template "vault.mounts" . }}
           ports:
             - containerPort: 8200
               name: http
@@ -88,5 +91,5 @@ spec:
             periodSeconds: 3
             successThreshold: 1
             timeoutSeconds: 5
-  {{ template "vault.volumeclaims" . }}
-{{ end }}
+  {{ template "vault.volumeclaims" . -}}
+{{- end -}}

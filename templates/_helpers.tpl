@@ -96,7 +96,7 @@ extra volumes the user may have specified (such as a secret with TLS).
         - name: config
           configMap:
             name: {{ template "vault.fullname" . }}-config
-  {{ end }}
+  {{ end -}}
   {{- range .Values.server.extraVolumes }}
         - name: userconfig-{{ .name }}
           {{ .type }}:
@@ -105,7 +105,7 @@ extra volumes the user may have specified (such as a secret with TLS).
           {{- else if (eq .type "secret") }}
             secretName: {{ .name }}
           {{- end }}
-  {{- end }}
+  {{- end -}}
 {{- end -}}
 
 {{/*

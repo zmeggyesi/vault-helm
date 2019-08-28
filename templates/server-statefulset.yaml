@@ -31,15 +31,15 @@ spec:
         component: server
       {{ template "vault.annotations" . }}
     spec:
-      {{ template "vault.affinity" . }}
-      {{ template "vault.tolerations" . }}
-      {{ template "vault.nodeselector" . }}
+      {{- template "vault.affinity" . }}
+      {{- template "vault.tolerations" . }}
+      {{- template "vault.nodeselector" . }}
       terminationGracePeriodSeconds: 10
       serviceAccountName: {{ template "vault.fullname" . }}
       securityContext:
         fsGroup: {{ template "vault.fsgroup" . }}
       volumes:
-        {{ template "vault.volumes" . }}
+        {{- template "vault.volumes" . }}
       containers:
         - name: vault
 {{- if .Values.server.resources }}

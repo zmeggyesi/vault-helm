@@ -42,7 +42,8 @@ spec:
         {{ template "vault.volumes" . }}
       containers:
         - name: vault
-          {{ template "vault.resources" . }}
+            resources:
+{{ toYaml .Values.server.resources | indent 14}}
           securityContext:
             privileged: true
           image: "{{ .Values.global.image }}"
